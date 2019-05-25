@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import short_url
-
+from urllib.parse import urlparse
 Base = declarative_base()
 
 
@@ -39,5 +39,18 @@ def link_hash(original_url):
         db_url_entity = Url(original_url)
         session.add(db_url_entity)
         session.commit()
+    my_hash = session.query(Url).filter(Url.original == original_url).one().short
 
-    return session.query(Url).filter(Url.original == original_url).one().short
+    return f"http://127.0.0.1:5000/{my_hash}"
+
+
+def get_hash(url):
+    o = urlparse(url)
+    hashed = o[2]
+    return hashed[1:].strip()
+
+
+def original_link(hash):
+    session = get_session()
+    hash = get_hash(hash)
+    return session.query(Url).filter(Url.short == hash).one().original
