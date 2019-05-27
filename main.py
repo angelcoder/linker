@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 import shorten_url as su
+import requests
 import urllib
 
 app = Flask(__name__)
@@ -15,14 +16,6 @@ def redirect_origin(url):
     link = su.original_link(url)
     return redirect(link, code=302)
 
-
-@app.route('/make-request')
-def make_request():
-    link = request.args.get('urllink')
-    if link:
-        urllib.request.urlopen(link)
-
-    return redirect('https://stackoverflow.com/questions/45040365/flask-redirect-to-page-then-come-back')
 
 @app.route('/', methods=['POST'])
 def getvalue():

@@ -53,4 +53,4 @@ def get_hash(url):
 def original_link(hash):
     session = get_session()
     hash = get_hash(hash)
-    return session.query(Url).filter(Url.short == hash).one().original
+    return session.query(Url).filter(Url.short == hash).one().original.strip()
